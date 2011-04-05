@@ -36,4 +36,15 @@ class TestHSMSFactory < Test::Unit::TestCase
     assert_equal(22, f[1].length)
     assert_equal("\x00\x00\x00\x16" + "\x03" * 10 + "\x04" * 12, f[1].buffer)
   end
+  
+  def test_sequence_number
+    f1 = HSMSFactory.new()
+    assert_equal(1, f1.get_sequence_number)
+
+    f2 = HSMSFactory.new(0xFFFFFFFD)
+    assert_equal(0xFFFFFFFE, f2.get_sequence_number)
+    assert_equal(0xFFFFFFFF, f2.get_sequence_number)
+    assert_equal(1, f2.get_sequence_number)
+    assert_equal(2, f2.get_sequence_number)
+  end
 end

@@ -1,7 +1,11 @@
 require "hsms_message"
 
 class HSMSFactory
-  def initialize
+  MAX_SEQUENCE_NUMBER = 0xFFFFFFFF
+  attr_reader :sequence_number
+
+  def initialize(initial_number = 0)
+    @sequence_number = initial_number
     clear
   end
   
@@ -22,6 +26,11 @@ class HSMSFactory
     @messages.each { |message| 
       yield(message)
     }
+  end
+  
+  def get_sequence_number
+    @sequence_number = 0 if @sequence_number >= MAX_SEQUENCE_NUMBER
+    return @sequence_number += 1
   end
   
   def feed(org_data)

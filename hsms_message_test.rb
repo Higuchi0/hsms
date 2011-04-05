@@ -46,5 +46,28 @@ class TestHSMSMessage < Test::Unit::TestCase
     h.feed(select_rsp)
     assert_equal(10, h.length)
   end
+  
+  def test_set_data
+    h = HSMSMessage.new
+    h.set_data("")
+    assert_equal(10, h.length)
+    
+    h.set_data("\x00" * 100)
+    assert_equal(110, h.length)
+  end
+  
+  def test_set_system_byte
+    h = HSMSMessage.new
+    h.set_data("")
+    h.set_system_byte(1)
+    assert_equal(1, h.buffer[HSMSMessage::SYSTEM_BYTES + 3])
+  end
+  
+  def test_get_system_byte
+    h = HSMSMessage.new
+    h.set_data("")
+    h.set_system_byte(10)
+    assert_equal(10, h.get_system_byte)
 
+  end
 end
